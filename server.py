@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, url_for, request
-
+from Main import predecir
 app = Flask(__name__)
 
 autor1 = {
@@ -24,6 +24,9 @@ def inicio():
         muni = request.form['mun']
         print(gen, edad, anno, depto, muni, sep=',')
         # ejecutar analisis
+        resultado =  predecir(int(gen),int(edad),int(anno),depto,muni)
+        print(resultado)
+        
 
 
     return render_template("index.html", resultado=resultado)
