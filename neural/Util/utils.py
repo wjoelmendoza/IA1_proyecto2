@@ -2,17 +2,76 @@ import datetime
 import pandas as pd
 from math import radians, cos, sin, asin, sqrt
 from numpy import genfromtxt
+import codecs, json
+
 
 def load_file1():
     return pd.read_csv(
         'temporales/Dataset.csv',
-        dtype= {'Estado':'object','Genero':'object','Edad':'int64','Anio':'int64','cod_depto':'int64','cod_muni':'int64'}
+        dtype= {'Estado':'object','Genero':'object','Edad':'int64','Anio':'int64','cod_depto':'int64','cod_muni':'int64','nombre':'object','municipio':'object'}
         )
 def load_file2():
     return pd.read_csv(
         'temporales/Municipios.csv',
         dtype= {'Depto':'int64','Muni':'int64','lat':'float64','lon':'float64'}
         )
+
+def generar_json_deps_mun():
+    departamentos = {}
+    datos1 = load_file1()
+    for index, row in datos1.iterrows():
+        cod_depto = row['cod_depto']
+        nombre =  row['nombre']
+        cod_muni = row['cod_muni']
+        muni = row['municipio']
+        if  cod_depto in departamentos:
+            ##ya esta
+            dep = departamentos[cod_depto]
+            lmunis = dep['munis']
+            if cod_muni in lmunis:
+                pass
+            else:
+                #NO ESTA EL MUNICIPIO
+                lmunis[cod_muni] = {'nombre':muni}
+        else:
+            lmunis = {}
+            lmunis[cod_muni] = {'nombre':muni}
+            departamentos[cod_depto] = {'nombre':nombre,'munis':lmunis}
+
+    return departamentos
+
+def make_client_Dataset(genero,edad,anio,dep,mun):
+    #TENGO QUE TRATAR LOS DATOS!!!!
+    #HABRO LOS MINIMOS Y MAXIMOS.....
+    obj_text = codecs.open('temporales/escalamiento.json', 'r', encoding='utf-8').read()
+    datos = json.loads(obj_text)
+    #######---distancia
+    distancia = 0
+    datos2 = load_file2()
+    for index2,row2 in datos2.iterrows():
+        if dep == row2['Depto'] and mun == row2['Muni']:
+            lat2 = row2['Lat']
+            lat3 = row2['Lon']
+            distancia = haversine(14.589246,-90.551449,lat2,lat3)
+            break
+    realdist = (distancia - datos['mindist']) /(datos['maxdist']-datos['mindist'] )
+            
+    #---------------
+    #####--------anio
+    realanio = (anio-datos['minanio'])/(datos['maxanio']-datos['minanio'])
+    ###--------------------
+    ####---------edad
+    realedad = (edad - datos['minedad'])/(datos['maxedad']- datos['minedad'])
+    ##------------
+    data = ["WUT",realdist,genero,realedad,realanio]
+
+    df = pd.DataFrame(data,columns=['Estado','Distancia','Genero','Edad','Anio'])
+    Y = df['Estado']
+    X = df[['Distancia','Genero','Edad','Anio']]
+    train_X = X.to_numpy()
+    train_Y = Y.to_numpy()
+    return train_X,train_Y
+    
 def get_Dataset():
     df =  pd.read_csv(
         'temporales/mydata.csv',
@@ -37,6 +96,9 @@ def get_Dataset():
     return train_X.T,val_X.T,test_X.T,train_Y.T,val_Y.T,test_Y.T
         
     #return genfromtxt('temporales/mydata.csv', delimiter=',')
+
+
+    
 def tratamiento_de_datos():
     datos1 = load_file1()
     datos2 = load_file2()
@@ -66,7 +128,19 @@ def tratamiento_de_datos():
     mindist = datos1['Distancia2'].min()
     maxdist = datos1['Distancia2'].max()
     factordist = maxdist - mindist
-    #------------------------------------------------------------
+    #--Se guardan los minimos y maximos para el escalonamiento de los valores ingresados por la pagina----------------------------------------------------------
+    dict = {
+        'minedad':minedad.item(),
+        'maxedad':maxedad.item(),
+        'minanio':minanio.item(),
+        'maxanio':maxanio.item(),
+        'mindist':mindist.item(),
+        'maxdist':maxdist.item()
+    }
+    file_path = "temporales/escalamiento.json" ## your path variable
+    json.dump(dict, codecs.open(file_path, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4) ### this saves the array in .json format
+    
+    #---------------
     listdist = []
     listedad = []
     listanio = []

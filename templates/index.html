@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proyecto1</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='mystyles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='jquery-ui.css') }}" />
+
+</head>
+
+<body>
+    <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+        <div class="container">
+            <a href="../" class="navbar-brand">Proyecto2--Redes Neuronales</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Predicciones <span class="sr-only">(current)</span></a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-3">Proyecto2--Redes Neuronales</h1>
+            <div class="card text-white bg-primary mb-3" style="max-width: 100rem;">
+                <div class="card-header">INGRESE INFORMACION</div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <form id="idFormpatentes" action="/setpatente" method="POST" enctype="application/x-www-form-urlencoded" class="ajax">
+                                    <div class="form-group">
+                                        <div class="input-gruop mb-3">
+
+                                            <div class="form-group ">
+                                                <label for="genero">Genero:</label>
+                                                <select class="form-control " id="genero" name="genero">
+                                                    <option value="0">MASCULINO</option>
+                                                    <option value="1">FEMENINO</option>
+                                                    
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="titulo">edad</label>
+                                                <input type="number" class="form-control" id="edad" placeholder="Edad" name="edad">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="anio">Anio</label>
+                                                <input type="number" class="form-control" id="anio" placeholder=" Anio " name="anio">
+                                            </div>
+
+
+
+                                            {% if deps: %}
+                                            <div class="form-group ">
+                                                <label for="selpais1 ">Departamentos:</label>
+                                                <select class="form-control " id="departamento" name="departamento">
+                                                    {% for row in deps %}
+                                                    <option value="{{row[0]}} ">{{row[1]}}</option>
+                                                    {% endfor %}
+
+                                                </select>
+                                            </div>
+                                            {% endif %}
+
+                                            <div class="form-group ">
+                                                <label for="municipio">Municipios:</label>
+                                                <select class="form-control " id="municipio" name="municipios">
+                                                    
+                                                </select>
+
+
+                                            </div>
+
+
+
+
+                                            <div id="dinamico ">
+
+                                            </div>
+                                            <div class="input-group-append ">
+                                                <input type="submit " value="Crear " class="input-group-text " />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div id="infopatentes ">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    </div>
+
+
+
+    <footer class="footer bg-dark rounded-top text-center ">
+        <div class="container py-2 ">
+            <p class="text-white my-2 ">
+                &copy; {{autor1.nombre + ' ' + autor1.apellido + ' &'}}
+            </p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for( 'static', filename='jquery-3.5.1.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static', filename='popper.min.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static', filename='bootstrap.min.js' ) }} "></script>
+
+    <script src="{{ url_for( 'static', filename='jquery-ui.js' ) }} "></script>
+    <script src="{{ url_for( 'static', filename='code.js' ) }} "></script>
+
+</body>
+
+</html>

@@ -2,7 +2,7 @@ from neural.Util.ReadFile import get_dataFile
 from neural.Util import Plotter
 from neural.Neural_Network.Data import Data
 from neural.Neural_Network.Model import NN_Model
-from neural.Util.utils import get_Dataset
+from neural.Util.utils import get_Dataset,generar_json_deps_mun,tratamiento_de_datos
 import numpy as np
 import codecs, json 
 #-----------------------------
@@ -14,14 +14,14 @@ ENTRENO = False
 _hiperparametros = [
     [0.00001,0.00005,0.0001,0.0003,0.001,0.005,0.01,0.05,0.1,0.5],
     [0,0.01,0.05,0.1,0.5,1,1.5,2,5,7],
-    #[500,750,1250,1500,2000,4000,7500,15000,20000,25000],
-    [100,100,100,100,100,100,99,100,100,100],
+    [500,750,1250,500,750,1250,500,750,1250,100],
+    #[100,100,100,100,100,100,99,100,100,100],
     [1,0.97,0.095,0.9,0.85,0.75,0.65,0.5,0.3,0.1],
     
 ]
-#---------------
+#---------------clear
 _generacion = 0
-_numpoblacion = 15
+_numpoblacion = 10
 _maximas_generaciones = 5
 ##############################################
 
@@ -52,7 +52,7 @@ def get_fitness_poblacion(pob):
         print("INDIVIDUO::",p)
         print("HIPERPARAMETROS::",p[0])
         validacion,pesos = Entrenar_red(p)
-        listica.append((p,validacion,pesos))
+        listica.append((p[0],validacion,pesos))
     return listica
 def takeSecond(elem):
     #print("Entre a takeSecond().........")
@@ -60,7 +60,8 @@ def takeSecond(elem):
 
 def seleccionar(m_pob):
 
-    print("seleccionar().........")
+    print("Entre en seleccionar().........")
+    print(m_pob)
     return s_torneo(m_pob)
 
 
@@ -98,10 +99,11 @@ def s_torneo(m_pob):
 def s_mejores(m_pob):
     select = []
     print("Entre a s_mejores().........")
-    v_calidad = get_fitness_poblacion(m_pob[0])
+    print(m_pob)
+    v_calidad = get_fitness_poblacion(m_pob)
     #print("Vector de calidad:",v_calidad)
     #v_calidad = mejor_solucion(lfits)
-    v_calidad.sort(reverse=False, key=takeSecond)
+    v_calidad.sort(reverse=True, key=takeSecond)
     #print("(2)Vector de calidad:",v_calidad)
     t = len(m_pob)
   
@@ -129,18 +131,20 @@ def emparejar(padres):
             
             index2 = randint(0,tampadres-1)
 
-        h1 = cruzar(padres[index1], padres[index2])
+        h1 = cruzar(padres[index1][0], padres[index2][0])
         h1 = mutar(h1)
         hijos.append(h1)
         
     
     for hijo in hijos:
-        padres.append(hijo)
+        padres.append((hijo,0,{}))
 
     return padres
 
 def cruzar(v1, v2):
-    #print("Entre a cruzar().........")
+    print("Entre a cruzar().........")
+    print(v1)
+    print(v2)
     vn = []
 
     if random() > .5:
@@ -250,7 +254,13 @@ def Entrenar_red(p0):#return exactitud,pesos
     print('Pruebas Modelo 1')
     nn1.predict(test_set)
     return exactitud,pesos
-def predecir(datos):#return y_hat
+def predecir(genero,edad,anio,dep,mun):#return y_hat?
+    #SE COMIENSA CON EL ESCALAMIENTO..
+    #SE CARGA EL ARCHIVO CON LOS MINIMOS Y MAXIMOS
+    obj_text = codecs.open('temporales/escalamiento.json', 'r', encoding='utf-8').read()
+    datos_escalamiento = json.loads(obj_text)
+    # SE ESCALA LA DISTANCIA...
+    #-Se calcula la distancia segun los codigos de los dep y mun
     # Cargando conjunto de datos
     train_X,val_X,test_X,train_Y,val_Y,test_Y = get_Dataset()
      # Definir los conjuntos de datos
@@ -319,6 +329,10 @@ def main():
     fin = criterio(p0)
     _generacion = 1
     while(fin == None):
+        print("--------------------------FITNESS DE LA ITERACION:: ",_generacion,"--------------")
+        for fat in p0:
+            print(fat[1])
+        print("--------------------------FIN DE LA ITERACION:: ",_generacion,"--------------")
         padres = seleccionar(p0)
         p0 = emparejar(padres)
         #print("Termino de emparejar")
@@ -330,7 +344,8 @@ def main():
     print(_generacion)
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@Procederia a guardar los parameros de::@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(fin[0])
-    '''
+
+    pesos = fin[0][2]
     lw1 = pesos['W1'].tolist()
     lb1 = pesos['b1'].tolist()
     lw2 = pesos['W2'].tolist()
@@ -352,9 +367,16 @@ def main():
     #b = pesos.tolist() # nested lists with same data, indices
     file_path = "temporales/pesos.json" ## your path variable
     json.dump(newpesos, codecs.open(file_path, 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4) ### this saves the array in .json format
-    '''
+    
     #escribir_en_bitacora(flag_finalizacion,flag_seleccion,file_name,_generacion,fin)
     return fin
 
+
+
+
+
+
 if __name__ == "__main__":
-    main()
+    #main()
+    tratamiento_de_datos()
+    
