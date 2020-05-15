@@ -13,9 +13,20 @@ autor2 = {
     "apellido": "López"
 }
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def inicio():
-    return render_template("index.html")
+    resultado = None
+    if request.method == 'POST':
+        gen = request.form['genero']
+        edad = request.form['edad']
+        anno = request.form['anno']
+        depto = request.form['depto']
+        muni = request.form['mun']
+        print(gen, edad, anno, depto, muni, sep=',')
+        # ejecutar analisis
+
+
+    return render_template("index.html", resultado=resultado)
 
 
 if __name__ == "__main__":

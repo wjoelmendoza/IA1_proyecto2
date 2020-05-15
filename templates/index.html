@@ -26,7 +26,7 @@
             <div class="row mb-2">
               <div class="col-md-6">
                 <div class="col p-4 d-flex flex-column position-static">
-                  <form action="/cargar_imagenes" method="POST" enctype="multipart/form-data">
+                  <form action="/" method="POST">
                     <div class="form-group">
                       <div class="input-gruop mb-3">
                         <label for="genero">Genero:</label>
@@ -40,12 +40,12 @@
                         <br/>
                         <label for="edad">Edad:</label>
                         <br/>
-                        <input type="number" min="0" value="0" required="true" />
+                        <input name="edad" id="edad" type="number" min="0" value="0" required="true" />
                         <br/>
                         <br/>
                         <label for="anno">Año de inscripción:</label>
                         <br/>
-                        <input type="number" min="2000" placeholder="2020" required="true"/>
+                        <input name="anno" id="anno" type="number" min="2000" placeholder="2020" required="true"/>
                         <br/>
                         <br/>
                         <label for="depto">Departamento:</label>
