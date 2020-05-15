@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale"/>
+    <title>Proyecto No. 2</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mystyles.css') }}"/>
+  </head>
+  <body onload="poblar(s_dep.value)">
+    <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+      <div class="container">
+        <a href="../" class="navbar-brand">Proyecto No. 2</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive"></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="jumbotron">
+        <h1 class="display-3">Escuela de Ciencias y Sistemas</h1>
+        <div class="card text-white bg-primary mb-3" style="max-width: 100rem;">
+          <div class="card-header">Ingrese los datos generales del aspirante</div>
+          <div class="card-body">
+            <div class="row mb-2">
+              <div class="col-md-6">
+                <div class="col p-4 d-flex flex-column position-static">
+                  <form action="/cargar_imagenes" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <div class="input-gruop mb-3">
+                        <label for="genero">Genero:</label>
+                        <br/>
+                        <select name="genero" id="genero" required="true">
+                          <option value="M">Masculino</option>
+                          <option value="F">Femenino</option>
+                          <option value="O">Otro</option>
+                        </select>
+                        <br/>
+                        <br/>
+                        <label for="edad">Edad:</label>
+                        <br/>
+                        <input type="number" min="0" value="0" required="true" />
+                        <br/>
+                        <br/>
+                        <label for="anno">Año de inscripción:</label>
+                        <br/>
+                        <input type="number" min="2000" placeholder="2020" required="true"/>
+                        <br/>
+                        <br/>
+                        <label for="depto">Departamento:</label>
+                        <br/>
+                        <select name="depto" id="depto">
+                          <option value="1">Guatemala</option>
+                          <option value="2">El Progreso</option>
+                          <option value="3">Sacatepéquez</option>
+                          <option value="4">Chimaltenango</option>
+                          <option value="5">Escuintla</option>
+                          <option value="6">Santa Rosa</option>
+                          <option value="7">Sololá</option>
+                          <option value="8">Totonicapán</option>
+                          <option value="9">Quetzaltenango</option>
+                          <option value="10">Suchitepéquez</option>
+                          <option value="11">Retalhuleu</option>
+                          <option value="12">San Marcos</option>
+                          <option value="13">Huehuetenango</option>
+                          <option value="14">Quiché</option>
+                          <option value="15">Baja Verapaz</option>
+                          <option value="16">Alta Verapaz</option>
+                          <option value="17">Petén</option>
+                          <option value="18">Izabal</option>
+                          <option value="19">Zacapa</option>
+                          <option value="20">Chiquimula</option>
+                          <option value="21">Jalapa</option>
+                          <option value="22">Jutiapa</option>
+                        </select>
+                        <br/>
+                        <br/>
+                        <label for="mun">Municipio:</label>
+                        <br/>
+                        <select name="mun" id="mun">
+
+                        </select>
+                        <br/>
+                        <br/>
+                        <div class="input-group-append">
+                          <input type="submit" value="Consultar" class="input-group-text" />
+                          <input type="reset" value="Cancelar" class="input-group-text" />
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{{url_for('static', filename='code.js')}}"></script>
+  </body>
+</html>
